@@ -28,7 +28,7 @@ mkdir -p "$LATEST_DIR"
 databases=`mysql --defaults-extra-file=$OPTIONS_FILE -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 for db in $databases; do
-  mysqldump --defaults-extra-file=$OPTIONS_FILE --force --opt --databases --events --routines --triggers $db | gzip > "$BACKUP_DIR/$db-$TIMESTAMP.gz"
+  mysqldump --defaults-extra-file=$OPTIONS_FILE --force --opt --databases --events --routines --triggers $db | gzip > "$BACKUP_DIR/$db-$TIMESTAMP.sql.gz"
 
   ln -s "$BACKUP_DIR/$db-$TIMESTAMP.gz" "$LATEST_DIR/$db-$TIMESTAMP.gz"
 done
