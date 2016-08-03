@@ -11,8 +11,11 @@ elif [[ $1 == W ]]; then
 elif [[ $1 == M ]]; then
     BACKUP_PERIOD="monthly"
     REMOVE_TIMESPAN_DAYS=+93
+elif [[ $1 == H ]]; then
+    BACKUP_PERIOD="hourly"
+    REMOVE_TIMESPAN_DAYS=+1
 else
-    echo "Time period parameter not supplied should be D, W or M"
+    echo "Time period parameter not supplied should be H, D, W or M"
     exit 1
 fi
 
