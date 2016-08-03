@@ -1,0 +1,4 @@
+[client]
+#socket=/tmp/mysql.sock
+user=username
+password=password
