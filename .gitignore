@@ -1,1 +1,4 @@
-backup
+data
+
+# This file is in the repository, but should not be updated
+mysql_options.cnf
