@@ -17,8 +17,8 @@ else
 fi
 
 TIMESTAMP=$(date +"%F")
-BACKUP_DIR="$SCRIPTDIR/backup/$BACKUP_PERIOD"
-LATEST_DIR="$SCRIPTDIR/backup/latest"
+BACKUP_DIR="$SCRIPTDIR/data/$BACKUP_PERIOD"
+LATEST_DIR="$SCRIPTDIR/data/latest"
 OPTIONS_FILE=$SCRIPTDIR/mysql_options.cnf
 
 mkdir -p "$BACKUP_DIR"
