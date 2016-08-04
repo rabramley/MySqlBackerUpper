@@ -19,7 +19,7 @@ else
     exit 1
 fi
 
-TIMESTAMP=$(date +"%F")
+TIMESTAMP=$(date --rfc-3339=seconds)
 BACKUP_DIR="$SCRIPTDIR/data/$BACKUP_PERIOD"
 LATEST_DIR="$SCRIPTDIR/data/latest"
 OPTIONS_FILE=$SCRIPTDIR/mysql_options.cnf
