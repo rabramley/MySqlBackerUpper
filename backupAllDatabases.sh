@@ -22,7 +22,6 @@ fi
 TIMESTAMP=$(date --rfc-3339=seconds)
 BACKUP_DIR="$SCRIPTDIR/data/$BACKUP_PERIOD"
 LATEST_DIR="$SCRIPTDIR/data/latest"
-BACKUP_FILENAME="$db-$TIMESTAMP.sql.gz"
 OPTIONS_FILE=$SCRIPTDIR/mysql_options.cnf
 
 mkdir -p "$BACKUP_DIR"
@@ -32,6 +31,8 @@ mkdir -p "$LATEST_DIR"
 databases=`mysql --defaults-extra-file=$OPTIONS_FILE -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 for db in $databases; do
+  BACKUP_FILENAME="$db-$TIMESTAMP.sql.gz"
+
   mysqldump --defaults-extra-file=$OPTIONS_FILE --force --opt --databases --events --routines --triggers $db | gzip > "$BACKUP_DIR/$BACKUP_FILENAME"
 
   ln -s "$BACKUP_DIR/$BACKUP_FILENAME" "$LATEST_DIR/$BACKUP_FILENAME"
