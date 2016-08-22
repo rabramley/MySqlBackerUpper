@@ -31,7 +31,7 @@ mkdir -p "$LATEST_DIR"
 databases=`mysql --defaults-extra-file=$OPTIONS_FILE -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
 
 for db in $databases; do
-  BACKUP_FILENAME="$db-$TIMESTAMP.sql.gz"
+  BACKUP_FILENAME="$db-$BACKUP_PERIOD-$TIMESTAMP.sql.gz"
 
   mysqldump --defaults-extra-file=$OPTIONS_FILE --force --opt --databases --events --routines --triggers $db | gzip > "$BACKUP_DIR/$BACKUP_FILENAME"
 
