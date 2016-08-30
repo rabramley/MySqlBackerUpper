@@ -49,7 +49,7 @@ mkdir -p "$LATEST_DIR"
 
 if [ $IS_POSTGRES -eq 1 ]; then
     GetPsqlDatabases
-elif
+else
     GetMysqlDatabases
 fi
 
@@ -58,7 +58,7 @@ for db in $databases; do
 
   if [ $IS_POSTGRES -eq 1 ]; then
     BackupPsql
-  elif
+  else
     BackupMysql
   fi
 
