@@ -16,9 +16,9 @@ function BackupPsql {
     pg_dump -U lampuser $db | gzip > "$BACKUP_DIR/$BACKUP_FILENAME"
 }
 
-source ./properties.sh
-
 SCRIPTDIR=$(dirname "$0")
+
+source $SCRIPTDIR/properties.sh
 
 if [[ $1 == D ]]; then
     BACKUP_PERIOD="daily"
