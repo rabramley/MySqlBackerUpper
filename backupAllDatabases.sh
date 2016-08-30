@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+function GetMysqlDatabases {
+    databases=`mysql --defaults-extra-file=$MYSQL_OPTIONS_FILE -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
+}
+
+function BackupMysql {
+    mysqldump --defaults-extra-file=$MYSQL_OPTIONS_FILE --force --opt --databases --events --routines --triggers $db | gzip > "$BACKUP_DIR/$BACKUP_FILENAME"
+}
+
+function GetPsqlDatabases {
+    databases=`psql -U lampuser -d postgres -c 'SELECT datname FROM pg_database WHERE datistemplate = false;' -t`
+}
+
+function BackupPsql {
+    pg_dump -U lampuser $db | gzip > "$BACKUP_DIR/$BACKUP_FILENAME"
+}
+
+source ./properties.sh
+
 SCRIPTDIR=$(dirname "$0")
 
 if [[ $1 == D ]]; then
@@ -22,18 +40,27 @@ fi
 TIMESTAMP=$(date --rfc-3339=seconds)
 BACKUP_DIR="$SCRIPTDIR/data/$BACKUP_PERIOD"
 LATEST_DIR="$SCRIPTDIR/data/latest"
-OPTIONS_FILE=$SCRIPTDIR/mysql_options.cnf
+MYSQL_OPTIONS_FILE=$SCRIPTDIR/mysql_options.cnf
 
 mkdir -p "$BACKUP_DIR"
 rm -fR "$LATEST_DIR"
 mkdir -p "$LATEST_DIR"
 
-databases=`mysql --defaults-extra-file=$OPTIONS_FILE -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema)"`
+
+if [ $IS_POSTGRES -eq 1 ]; then
+    GetPsqlDatabases
+elif
+    GetMysqlDatabases
+fi
 
 for db in $databases; do
   BACKUP_FILENAME="$db-$BACKUP_PERIOD-$TIMESTAMP.sql.gz"
 
-  mysqldump --defaults-extra-file=$OPTIONS_FILE --force --opt --databases --events --routines --triggers $db | gzip > "$BACKUP_DIR/$BACKUP_FILENAME"
+  if [ $IS_POSTGRES -eq 1 ]; then
+    BackupPsql
+  elif
+    BackupMysql
+  fi
 
   ln -s "$BACKUP_DIR/$BACKUP_FILENAME" "$LATEST_DIR/$BACKUP_FILENAME"
 done
