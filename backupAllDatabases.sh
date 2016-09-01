@@ -18,6 +18,11 @@ function BackupPsql {
 
 SCRIPTDIR=$(dirname "$0")
 
+if [ ! -f $SCRIPTDIR/properties.sh ]; then
+    echo "ERROR: properties.sh does not exist"
+    exit 1
+fi
+
 source $SCRIPTDIR/properties.sh
 
 if [[ $1 == D ]]; then
@@ -46,6 +51,10 @@ mkdir -p "$BACKUP_DIR"
 rm -fR "$LATEST_DIR"
 mkdir -p "$LATEST_DIR"
 
+if [[ ! -z "$LATEST_COPY_DIR" ]]; then
+  rm -fR "$LATEST_COPY_DIR"
+  mkdir -p "$LATEST_COPY_DIR"
+fi
 
 if [ $IS_POSTGRES -eq 1 ]; then
     GetPsqlDatabases
@@ -63,6 +72,11 @@ for db in $databases; do
   fi
 
   ln -s "$BACKUP_DIR/$BACKUP_FILENAME" "$LATEST_DIR/$BACKUP_FILENAME"
+
+  if [[ ! -z "$LATEST_COPY_DIR" ]]; then
+    cp "$BACKUP_DIR/$BACKUP_FILENAME" "$LATEST_COPY_DIR/$BACKUP_FILENAME"
+  fi
+
 done
 
 find $BACKUP_DIR -ctime $REMOVE_TIMESPAN_DAYS -exec rm {} +
