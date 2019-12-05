@@ -33,7 +33,7 @@ elif [[ $1 == W ]]; then
     REMOVE_TIMESPAN_DAYS=+21
 elif [[ $1 == M ]]; then
     BACKUP_PERIOD="monthly"
-    REMOVE_TIMESPAN_DAYS=+93
+    REMOVE_TIMESPAN_DAYS=+1000000
 elif [[ $1 == H ]]; then
     BACKUP_PERIOD="hourly"
     REMOVE_TIMESPAN_DAYS=+1
